@@ -4,6 +4,12 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import jwt,{decode} from 'jsonwebtoken';
 import userRouter from './routes/userRoutes.js ';
+import productRouter from './routes/ProductsRoutes.js';
+import cors from 'cors';
+
+
+
+
 
 
 
@@ -11,28 +17,27 @@ import userRouter from './routes/userRoutes.js ';
  const app = express();
 
 app.use(bodyParser.json());
+app.use(cors());
 
+app.use((req, res, next) => {
+    let token = req.headers['authorization']; 
 
-app.use((req,res,next)=>{
+    if (token) {
+        token = token.replace('Bearer ', '');
 
-    let token = req.headers("Authorization");
-
-
-    if(token != null){
-
-        token = token.replace('Bearer ','');
-
-        jwt.veryfy(token,process.env.JWT_SECRET,(err,decoded)=>{
-
-            if(err){
-                res.status(403).json('Token is invalid');
-            }else{
+        jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+            if (err) {
+                return res.status(403).json({ message: 'Token is invalid' });
+            } else {
+                req.user = decoded;  
                 next();
             }
-        })
+        });
+    } else {
+        next();  
     }
-    
-})
+});
+
 
 
 const mongoUrl =  process.env.MONGO_URL;
@@ -48,6 +53,9 @@ connection.once('open',()=>{
 
 
 app.use('/api/users',userRouter);
+app.use('/api/products',productRouter);
+
+
 
 
 app.listen(5000,()=>{

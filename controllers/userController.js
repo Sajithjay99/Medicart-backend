@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
 
+
  export function registerUser(req,res){
     
 
@@ -49,7 +50,7 @@ import bcrypt from 'bcrypt';
                                     lastName:user.lastname,
                                     email:user.email,
                                     role:user.role,
-                                    profilePicture:user.profilePicture
+                                    profilePicture:user.profilePicture,
                                 }, process.env.JWT_SECRET
                             )
 
@@ -70,11 +71,4 @@ import bcrypt from 'bcrypt';
 
  }
 
-
-//edit profile
-
-
-
-
-//logout user 
-//good luck
+ 
