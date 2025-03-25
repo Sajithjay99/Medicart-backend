@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import jwt,{decode} from 'jsonwebtoken';
 import userRouter from './routes/userRoutes.js ';
-
+import orderRouter from './routes/orderRoute.js';
 
 
  dotenv.config();
@@ -31,7 +31,6 @@ app.use((req, res, next) => {
         next();  
     }
 });
-
 const mongoUrl =  process.env.MONGO_URL;
 
 
@@ -45,11 +44,16 @@ connection.once('open',()=>{
 
 
 app.use('/api/users',userRouter);
-
+app.use('/api/orders',orderRouter);
 
 app.listen(5000,()=>{
     console.log('Server is running on port 5000');
 })
+ 
+
+
+
+
  
 
 
