@@ -10,8 +10,6 @@ import Order from "../models/order.js";
  const data = req.body;
 data.email = req.user.email;
 
-
- 
     const order = new Order(data);
 
     order.save()
@@ -23,8 +21,6 @@ data.email = req.user.email;
         }
     
     
-
-
 //get all orders to admin
 export function getAllOrders(req,res){
     if(req.user==null){
@@ -114,5 +110,43 @@ export function approveOrder(req,res){
         }).catch((err)=>{
             res.status(500).json({error:err});
         });
+    }
+
+}
+
+//update order by customer
+export function updateOrder(req, res) {
+    const id = req.params.id;
+
+    if (!req.user) {
+        return res.status(401).json({ message: "You must be logged in first" });
+    }
+
+    if (req.user.role === "customer") {
+        Order.findById(id)
+            .then((order) => {
+                if (!order) {
+                    return res.status(404).json({ message: "Order not found" });
+                }
+                if (order.isApproved) {
+                    return res.status(403).json({ message: "Cannot edit an approved order" });
+                }
+                Order.findByIdAndUpdate(
+                    id,
+                    { $set: req.body },
+                    { new: true, runValidators: true } 
+                )
+                    .then((updatedOrder) => {
+                        res.json({ message: "Order updated successfully", order: updatedOrder });
+                    })
+                    .catch((err) => {
+                        res.status(500).json({ error: err.message });
+                    });
+            })
+            .catch((err) => {
+                res.status(500).json({ error: err.message });
+            });
+    } else {
+        res.status(403).json({ message: "Unauthorized to update order" });
     }
 }
