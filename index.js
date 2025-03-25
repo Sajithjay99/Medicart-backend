@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import jwt,{decode} from 'jsonwebtoken';
 import userRouter from './routes/userRoutes.js ';
+import reviewRouter from './routes/reviewRoutes.js';
 import productRouter from './routes/ProductsRoutes.js';
 import cors from 'cors';
 import orderRouter from './routes/orderRoute.js';
@@ -13,6 +14,13 @@ import orderRouter from './routes/orderRoute.js';
 
 
 
+
+
+app.use((req, res, next) => {
+    let token = req.headers['authorization']; 
+
+    if (token) {
+        token = token.replace('Bearer ', '');
 
  dotenv.config();
  const app = express();
@@ -58,6 +66,7 @@ connection.once('open',()=>{
 
 
 app.use('/api/users',userRouter);
+app.use('/api/reviews',reviewRouter);
 app.use('/api/products',productRouter);
 app.use('/api/orders',orderRouter);
 app.listen(5000,()=>{
