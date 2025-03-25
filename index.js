@@ -31,9 +31,6 @@ app.use((req, res, next) => {
         next();  
     }
 });
-
-
-
 const mongoUrl =  process.env.MONGO_URL;
 
 
