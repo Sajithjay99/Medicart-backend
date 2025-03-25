@@ -13,27 +13,24 @@ import userRouter from './routes/userRoutes.js ';
 app.use(bodyParser.json());
 
 
-app.use((req,res,next)=>{
+app.use((req, res, next) => {
+    let token = req.headers['authorization']; 
 
-    let token = req.headers("Authorization");
+    if (token) {
+        token = token.replace('Bearer ', '');
 
-
-    if(token != null){
-
-        token = token.replace('Bearer ','');
-
-        jwt.veryfy(token,process.env.JWT_SECRET,(err,decoded)=>{
-
-            if(err){
-                res.status(403).json('Token is invalid');
-            }else{
+        jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+            if (err) {
+                return res.status(403).json({ message: 'Token is invalid' });
+            } else {
+                req.user = decoded;  
                 next();
             }
-        })
+        });
+    } else {
+        next();  
     }
-    
-})
-
+});
 
 const mongoUrl =  process.env.MONGO_URL;
 
