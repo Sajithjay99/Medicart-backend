@@ -9,18 +9,7 @@ import productRouter from './routes/ProductsRoutes.js';
 import cors from 'cors';
 import orderRouter from './routes/orderRoute.js';
 
-
-
-
-
-
-
-
-app.use((req, res, next) => {
-    let token = req.headers['authorization']; 
-
-    if (token) {
-        token = token.replace('Bearer ', '');
+ 
 
  dotenv.config();
  const app = express();
@@ -28,11 +17,7 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 app.use(cors());
 
-app.use((req, res, next) => {
-    let token = req.headers['authorization']; 
-
-    if (token) {
-        token = token.replace('Bearer ', '');
+  
 
 
 app.use((req, res, next) => {
@@ -69,6 +54,7 @@ app.use('/api/users',userRouter);
 app.use('/api/reviews',reviewRouter);
 app.use('/api/products',productRouter);
 app.use('/api/orders',orderRouter);
+
 app.listen(5000,()=>{
     console.log('Server is running on port 5000');
 })
