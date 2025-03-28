@@ -56,7 +56,7 @@ import bcrypt from 'bcrypt';
 
 
                     res.status(200).json({
-                       message: 'Login successful',token:token
+                       message: 'Login successful',token:token,role:user.role
                     });
                 }else{
                     res.status(400).json('Invalid password');
