@@ -223,4 +223,30 @@ export function deleteReviewbyCustomer(req, res) {
 
     }
 
-   
+//    // // Get Own One Review by Customer
+export function getOwnOneReview(req, res) {
+    if (req.user == null) {
+        res.status(401).json({ message: "You must be logged in to view a review" });
+        return;
+    }
+
+    const id = req.params.id;
+
+    // Find the review by ID first
+    Review.findById(id)
+        .then((review) => {
+            if (!review) {
+                return res.status(404).json({ message: "Review not found" });
+            }
+
+            // Ensure the logged-in user is the one who wrote the review
+            if (review.email === req.user.email) {
+                res.status(200).json({ message: "Review retrieved successfully", data: review });
+            } else {
+                res.status(401).json({ message: "You can only view your own reviews" });
+            }
+        })
+        .catch((err) => {
+            res.status(500).json({ message: "Error finding review", error: err });
+        });
+}
