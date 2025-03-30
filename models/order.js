@@ -32,7 +32,7 @@ const orderSchema = mongoose.Schema({
         required:true
     },
     allergies:{
-        type:Boolean,
+        type:String,
         required:true
     },
     

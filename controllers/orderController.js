@@ -97,22 +97,22 @@ export function deleteOrderbyCustomer(req,res){
 
 //approve by admin
 
-export function approveOrder(req,res){
+export function approveOrder(req, res) {
     const id = req.params.id;
-    if(req.user==null){
-        res.status(401).json({message:"You must be logged in first"});
-        return;
+    if (!req.user) {
+        return res.status(401).json({ message: "You must be logged in first" });
     }
-    if(req.user.role=="admin"){
-        Order.updateOne({_id:id},{isApproved:true})
-        .then(()=>{
-            res.json({message:"Order approved successfully"});
-        }).catch((err)=>{
-            res.status(500).json({error:err});
-        });
+    if (req.user.role === "admin") {
+        Order.updateOne({ _id: id }, { isApproved: true, status: "approved" }) // Ensure status is updated
+            .then(() => {
+                res.json({ message: "Order approved successfully" });
+            })
+            .catch((err) => {
+                res.status(500).json({ error: err });
+            });
     }
-
 }
+
 
 //update order by customer
 export function updateOrder(req, res) {
