@@ -51,6 +51,7 @@ const orderSchema = mongoose.Schema({
         type:String,
         required:true
     },
+    //admin approve
     isApproved:{
         type:Boolean,
         default:false,
